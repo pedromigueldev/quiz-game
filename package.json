@@ -15,7 +15,7 @@
     "typescript": "^5"
   },
   "dependencies": {
-    "oxiui-lib": "^0.2.19",
+    "oxiui-lib": "^0.2.20",
     "vite": "^7.3.1"
   }
 }

@@ -1,4 +1,12 @@
-import { Button, ContainerState, HRow, Signal, Text, VRow } from "oxiui-lib";
+import {
+  Button,
+  ContainerState,
+  HRow,
+  intrinsicState,
+  Signal,
+  Text,
+  VRow,
+} from "oxiui-lib";
 
 type STAGES = "start" | "playing" | "end";
 type CATEGORIES = ("HTML" | "CSS" | "JavaScript") | "";
@@ -41,17 +49,25 @@ export function startGame(category: CATEGORIES) {
   });
 }
 
-export class Application extends ContainerState {
-  onTopicClick = (category: CATEGORIES) => {
+export class OxiView extends intrinsicState("div") {
+  constructor(public onInit?: boolean) {
+    super();
+  }
+
+  View() {}
+  override body() {
+    return super.body(() => this.View());
+  }
+}
+
+class Wellcome extends OxiView {
+  onTopicClick(category: CATEGORIES) {
     startGame(category);
-  };
+  }
 
-  override view = () => {
-    new Text(`At ${GameState.value}`)
-      .asTitle()
-      .withStyle({ position: "absolute", left: "20px" });
-
+  override View() {
     new VRow()
+      .expand()
       .withProps({ id: "vrow frame" })
       .horizontalAlignment("center")
       .verticalAlignment("center")
@@ -70,5 +86,14 @@ export class Application extends ContainerState {
             );
           });
       });
-  };
+  }
+}
+
+export class Application extends OxiView {
+  override View() {
+    new Text(`At ${GameState.value.gameStage}`)
+      .asSubtitle()
+      .withStyle({ position: "absolute", left: "20px" });
+    new Wellcome();
+  }
 }
